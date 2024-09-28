@@ -42,12 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final bayTEController = TextEditingController();
   GlobalKey<FormState> formKey  = GlobalKey<FormState>();
   List<AyBayModel> ayBayList=[
-    AyBayModel(ay: "ay", bay: "bay"),
-    AyBayModel(ay: "ay", bay: "bay"),
-    AyBayModel(ay: "ay", bay: "bay"),
-    AyBayModel(ay: "ay", bay: "bay"),
-    AyBayModel(ay: "ay", bay: "bay"),
-    AyBayModel(ay: "ay", bay: "bay"),
+
   ];
   @override
   Widget build(BuildContext context) {
@@ -68,6 +63,7 @@ class _HomeScreenState extends State<HomeScreen> {
                  child: Row(
                   children: [
                     Expanded(child: TextFormField(
+                      keyboardType: TextInputType.number,
                       controller: ayTEController,
                       decoration: const InputDecoration(
                         labelText: "Ay",
@@ -76,6 +72,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     )),
                     const SizedBox(width: 8,),
                     Expanded(child: TextFormField(
+                      keyboardType: TextInputType.number,
                       controller: bayTEController,
                       decoration: const InputDecoration(
                           labelText: "Bay",
@@ -94,30 +91,71 @@ class _HomeScreenState extends State<HomeScreen> {
                         backgroundColor: Colors.deepPurple,
                         foregroundColor: Colors.white,
                       ),
-                      onPressed: (){}, child: const Text("Add"))
+                      onPressed: (){
+                        setState(() {});
+                        ayBayList.add(AyBayModel(ay: ayTEController.text.trim(), bay: bayTEController.text.trim()));
+                        ayTEController.clear();
+                        bayTEController.clear();
+                      }, child: const Text("Add"))
               ),
               const SizedBox(height: 10,),
               const Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   CatagoryWidget(title: 'Ay', color: Colors.green,),
-                  CatagoryWidget(title: 'Ay', color: Colors.blue,),
-                  CatagoryWidget(title: 'Ay', color: Colors.pink,),
-                  CatagoryWidget(title: 'Ay', color: Colors.brown,),
+                  CatagoryWidget(title: 'Date', color: Colors.blue,),
+                  CatagoryWidget(title: 'Bay', color: Colors.pink,),
+                  CatagoryWidget(title: 'More', color: Colors.brown,),
                 ],
               ),
-              ListView.builder(
-                shrinkWrap: true,
-                primary: false,
-                  itemCount: ayBayList.length,
+              const SizedBox(height: 10,),
+              Card(
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(24),
+                ),
+                color: Colors.deepPurple.shade200,
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  primary: false,
+                    itemCount: ayBayList.length,
 
-                  itemBuilder: (context,index){
-                    return ListTile(
-                      tileColor: Colors.deepPurple.shade300,
-                      title: Text(ayBayList[index].ay),
-                    );
-                  }
+                    itemBuilder: (context,index){
+                      return SizedBox(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 8),
+                          child: Row(
 
+                            children: [
+                              const SizedBox(width: 10,),
+                              SizedBox(
+                                  width: 70,
+                                  child: Text(ayBayList[index].ay, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),maxLines: 1, overflow: TextOverflow.ellipsis,)),
+                              const SizedBox(width: 10,),
+                              SizedBox(height: 30,
+                                  width: 100,
+                                  child: Card(child: Center(child: Text(ayBayList[index].ay)))),
+                              const SizedBox(width: 10,),
+                              SizedBox(
+                                  width: 70,
+                                  child: Text(ayBayList[index].bay, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),maxLines: 1, overflow: TextOverflow.ellipsis,)),
+                              const SizedBox(width: 10,),
+                              const Spacer(),
+                               InkWell(
+                                  onTap: (){
+                                    ayBayList.remove(ayBayList[index]);
+                                    setState(() {});
+                                  },
+                                  child: const Icon(Icons.delete, )),
+
+                              const SizedBox(width: 10,),
+                            ],
+                          ),
+                        ),
+                      );
+                    }
+
+                ),
               )
               // ListView.separated(
               //     itemBuilder: (context,index){},
