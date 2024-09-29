@@ -1,8 +1,11 @@
 import 'package:accounts/catagory_widhet.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 void main() {
   runApp(const Acount());
+
+
 }
 
 class Acount extends StatelessWidget {
@@ -41,11 +44,28 @@ class _HomeScreenState extends State<HomeScreen> {
   final ayTEController = TextEditingController();
   final bayTEController = TextEditingController();
   GlobalKey<FormState> formKey  = GlobalKey<FormState>();
-  List<AyBayModel> ayBayList=[
 
-  ];
+  List<AyBayModel> ayBayList=[];
+  int calculateAysum(List<AyBayModel>ayBayList){
+    int sumOfAy = 0;
+    for( AyBayModel i in ayBayList){
+      sumOfAy += int.parse(i.ay);
+    }
+    return sumOfAy;
+  }
+  int calculateBaysum(List<AyBayModel>ayBayList){
+    int sumOfAy = 0;
+    for( AyBayModel i in ayBayList){
+      sumOfAy += int.parse(i.bay);
+    }
+    return sumOfAy;
+  }
+  DateTime time = DateTime.now();
+
   @override
   Widget build(BuildContext context) {
+    int result = calculateAysum(ayBayList);
+    int resultBay = calculateBaysum(ayBayList);
     return  Scaffold(
       appBar: AppBar(
         title: const Text("Ay bay hisab"),
@@ -93,7 +113,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       onPressed: (){
                         setState(() {});
-                        ayBayList.add(AyBayModel(ay: ayTEController.text.trim(), bay: bayTEController.text.trim()));
+                        ayBayList.add(AyBayModel(ay: ayTEController.text.trim(), bay: bayTEController.text.trim(), date: DateFormat("yMd").format(time)));
                         ayTEController.clear();
                         bayTEController.clear();
                       }, child: const Text("Add"))
@@ -127,14 +147,16 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Row(
 
                             children: [
-                              const SizedBox(width: 10,),
+                              const SizedBox(width: 5,),
                               SizedBox(
                                   width: 70,
                                   child: Text(ayBayList[index].ay, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),maxLines: 1, overflow: TextOverflow.ellipsis,)),
                               const SizedBox(width: 10,),
                               SizedBox(height: 30,
                                   width: 100,
-                                  child: Card(child: Center(child: Text(ayBayList[index].ay)))),
+                                  child: Card(
+                                      margin: EdgeInsets.zero,
+                                      child: Center(child: Text(ayBayList[index].date)))),
                               const SizedBox(width: 10,),
                               SizedBox(
                                   width: 70,
@@ -157,24 +179,28 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 ),
               )
-              // ListView.separated(
-              //     itemBuilder: (context,index){},
-              //     separatorBuilder: (context,index){
-              //       return SizedBox(height: 10,);
-              //     },
-              //     itemCount: ayBayList.length,
-              // )
+
             ],
           ),
         ),
       ),
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          FloatingActionButton.extended(onPressed: (){}, label: Text("total ay: $result")),
+          const SizedBox(width: 4,),
+          FloatingActionButton.extended(onPressed: (){}, label: Text("total bay: $resultBay")),
+          const SizedBox(width: 4,),
+          FloatingActionButton.extended(onPressed: (){}, label: Text("total: ${result-resultBay}")),
+        ],
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }
 
 class AyBayModel {
-  final String ay,bay;
-
-  AyBayModel({required this.ay, required this.bay});
+  final String ay,bay,date;
+  AyBayModel({required this.date, required this.ay, required this.bay});
 
 }
